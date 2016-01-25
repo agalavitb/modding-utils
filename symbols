@@ -1,0 +1,20 @@
+#!/usr/bin/python3
+
+symbols = {}
+
+for line in open('value-list.txt'):
+	key, _, symbol = line.partition(' ')
+	symbols[int(key, 16)] = symbol.strip()
+
+if __name__ == '__main__':
+	import sys
+
+	if len(sys.argv) != 2:
+		print('usage: %s file' % sys.argv[0], file=sys.stderr)
+		sys.exit(1)
+	bytes = open(sys.argv[1], 'rb').read()
+	for i in range(len(bytes) - 3):
+		key = bytes[i] | bytes[i+1]<<8 | bytes[i+2]<<16 | bytes[i+3]<<24
+		if key in symbols:
+			print('%10d %s' % (i, symbols[key]))
+
